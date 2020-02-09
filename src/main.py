@@ -12,10 +12,6 @@ def handler(event, context):
 
 
     client = boto3.client('athena')
-    query_string = \
-        """SELECT userIdentity.userName, eventName, eventSource, requestParameters
-        FROM %s.%s 
-        WHERE userIdentity.userName = %s and
-        (eventName like 'Create%' or eventName like 'Run%');""" % (athenaDatabase, athenaTable, deletedUser)
+    query_string = "SELECT userIdentity.userName, eventName, eventSource, requestParameters FROM \"{}\".\"{}\" WHERE userIdentity.userName = \'{}\' and (eventName like 'Create%' or eventName like 'Run%');".format(athenaDatabase, athenaTable, deletedUser)
     results = fetch_user_events(client, query_string, athenaDatabase ,outputBucket)
     print (results)
